@@ -3,6 +3,7 @@ package com.example.geoquizapp
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,9 @@ class CheatActivity : AppCompatActivity() {
             binding.answerTextView.setText(answerText)
             setAnswerShowResult(true)
         }
+
+        // Add API level information
+        binding.apiLevelTextView.text = getString(R.string.api_level, Build.VERSION.SDK_INT)
     }
 
     private fun setAnswerShowResult(isAnswerShow: Boolean) {
@@ -39,7 +43,7 @@ class CheatActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_ANSWER_IS_TRUE = "com.example.geoquizzapp.answer_is_true"
-        const val EXTRA_ANSWER_SHOWN = "com.example.geoquizzapp.answer_shown"  // Note: Changed this string
+        const val EXTRA_ANSWER_SHOWN = "com.example.geoquizzapp.answer_shown"
 
         fun newIntent(packageContext: Context, answerIsTrue: Boolean): Intent {
             return Intent(packageContext, CheatActivity::class.java).apply {

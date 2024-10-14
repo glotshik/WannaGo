@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Constraint Layout"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"/>
+
+    </androidx.appcompat.widget.Toolbar>
+    <TextView
+        android:id="@+id/tvLoremIpsum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum"
+        android:textSize="9sp"
+        app:layout_constraintBottom_toTopOf="@id/tvMainNumber"
+        app:layout_constraintStart_toStartOf="@id/tvMainNumber"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="-8dp"/>
+    <TextView
+        android:id="@+id/tvMainNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="300"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvKcal"
+        android:layout_marginTop="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/ivPlaceholder1"
+        android:layout_marginBottom="60dp"
+        android:layout_marginStart="40dp" />
+
+    <TextView
+        android:id="@+id/tvKcal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="kcal"
+        app:layout_constraintTop_toTopOf="@id/tvMainNumber"
+        app:layout_constraintBottom_toBottomOf="@id/tvMainNumber"
+        app:layout_constraintStart_toEndOf="@id/tvMainNumber"
+        android:layout_marginStart="8dp"/>
+
+    <ImageView
+        android:id="@+id/ivKcalImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/placeholder"
+        app:layout_constraintTop_toTopOf="@id/tvMainNumber"
+        app:layout_constraintBottom_toBottomOf="@id/tvMainNumber"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/circular_background"/>
+
+
+
+    <ImageView
+        android:id="@+id/ivPlaceholder1"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/placeholder"
+        app:layout_constraintTop_toBottomOf="@id/tvMainNumber"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="32dp"/>
+
+    <TextView
+        android:id="@+id/tvNumber1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="120"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/ivPlaceholder1"
+        app:layout_constraintBottom_toBottomOf="@id/ivPlaceholder1"
+        app:layout_constraintStart_toEndOf="@id/ivPlaceholder1"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:id="@+id/tvLabel1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum"
+        android:textSize="9sp"
+        app:layout_constraintTop_toBottomOf="@id/tvNumber1"
+        app:layout_constraintStart_toStartOf="@id/tvNumber1"
+        android:layout_marginTop="4dp"/>
+
+    <ImageView
+        android:id="@+id/ivPlaceholder2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/placeholder"
+        app:layout_constraintTop_toTopOf="@id/ivPlaceholder1"
+        app:layout_constraintStart_toEndOf="@id/tvLabel1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="32dp"/>
+
+    <TextView
+        android:id="@+id/tvNumber2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/ivPlaceholder2"
+        app:layout_constraintBottom_toBottomOf="@id/ivPlaceholder2"
+        app:layout_constraintStart_toEndOf="@id/ivPlaceholder2"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:id="@+id/tvLabel2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum"
+        android:textSize="9sp"
+        app:layout_constraintTop_toBottomOf="@id/tvNumber2"
+        app:layout_constraintStart_toStartOf="@id/tvNumber2"
+        android:layout_marginTop="4dp"/>
+
+    <ImageView
+        android:id="@+id/ivPlaceholder3"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/placeholder"
+        app:layout_constraintTop_toBottomOf="@id/ivPlaceholder1"
+        app:layout_constraintStart_toStartOf="@id/ivPlaceholder1"
+        android:layout_marginTop="60dp"/>
+
+    <TextView
+        android:id="@+id/tvNumber3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="70"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/ivPlaceholder3"
+        app:layout_constraintBottom_toBottomOf="@id/ivPlaceholder3"
+        app:layout_constraintStart_toEndOf="@id/ivPlaceholder3"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:id="@+id/tvLabel3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum"
+        android:textSize="9sp"
+        app:layout_constraintTop_toBottomOf="@id/tvNumber3"
+        app:layout_constraintStart_toStartOf="@id/tvNumber3"
+        android:layout_marginTop="4dp"/>
+
+    <ImageView
+        android:id="@+id/ivPlaceholder4"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/placeholder"
+        app:layout_constraintTop_toTopOf="@id/ivPlaceholder3"
+        app:layout_constraintStart_toEndOf="@id/tvLabel3"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="32dp"/>
+
+    <TextView
+        android:id="@+id/tvNumber4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="662"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/ivPlaceholder4"
+        app:layout_constraintBottom_toBottomOf="@id/ivPlaceholder4"
+        app:layout_constraintStart_toEndOf="@id/ivPlaceholder4"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:id="@+id/tvLabel4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum"
+        android:textSize="9sp"
+        app:layout_constraintTop_toBottomOf="@id/tvNumber4"
+        app:layout_constraintStart_toStartOf="@id/tvNumber4"
+        android:layout_marginTop="4dp"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:progress="26"
+        android:progressDrawable="@drawable/custom_progress_bar"
+        app:layout_constraintTop_toBottomOf="@id/ivPlaceholder3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="90dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp" />
+
+    <TextView
+        android:id="@+id/tvProgressLabel1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@id/progressBar1"
+        app:layout_constraintStart_toStartOf="@id/progressBar1"/>
+
+    <TextView
+        android:id="@+id/tvProgressPercentage1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="26%"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@id/progressBar1"
+        app:layout_constraintEnd_toEndOf="@id/progressBar1"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:progress="50"
+        android:progressDrawable="@drawable/custom_progress_bar"
+        app:layout_constraintTop_toBottomOf="@id/tvProgressLabel1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintVertical_bias="0.5"/>
+
+    <TextView
+        android:id="@+id/tvProgressLabel2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@id/progressBar2"
+        app:layout_constraintStart_toStartOf="@id/progressBar2"/>
+
+    <TextView
+        android:id="@+id/tvProgressPercentage2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50%"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@id/progressBar2"
+        app:layout_constraintEnd_toEndOf="@id/progressBar2"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
