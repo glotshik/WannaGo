@@ -6,15 +6,6 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-<!--    <ImageView-->
-<!--        android:id="@+id/team_logo"-->
-<!--        android:layout_width="170dp"-->
-<!--        android:layout_height="170dp"-->
-<!--        android:contentDescription="Patriots logo"-->
-<!--        android:background="#EEEEEE"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        android:src="@drawable/patriots" />-->
     <ImageView
         android:id="@+id/team_logo"
         android:layout_width="170dp"

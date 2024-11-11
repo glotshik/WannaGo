@@ -1,6 +1,6 @@
 
 package com.example.criminalintent
-import Crime
+import com.example.criminalintent.Crime
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

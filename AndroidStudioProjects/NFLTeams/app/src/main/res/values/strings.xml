@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NFL Teams</string>
+
+    <!-- Team Detail Fragment -->
+    <string name="team_name_label">Team Name</string>
+    <string name="team_division_label">Division</string>
+    <string name="stadium_name_label">Stadium</string>
+
+    <!-- Content Descriptions -->
+    <string name="team_logo_content_description">Team Logo</string>
+
+    <!-- Placeholder Texts -->
+    <string name="team_name_placeholder">Team Name</string>
+    <string name="team_division_placeholder">Conference Division</string>
+    <string name="stadium_name_placeholder">Stadium Name</string>
+
+    <!-- Error Messages -->
+    <string name="error_loading_team_data">Error loading team data</string>
+
+    <!-- Button Labels -->
+    <string name="view_map_button">View on Map</string>
+
+    <!-- Other Labels -->
+    <string name="conference_label">Conference:</string>
+    <string name="division_label">Division:</string>
+</resources>
