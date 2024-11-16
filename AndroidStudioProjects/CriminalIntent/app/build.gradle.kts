@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("androidx.navigation.safeargs.kotlin")
     id("org.jetbrains.kotlin.kapt")
 }
 
@@ -47,6 +48,8 @@ dependencies {
     // Fragment and Lifecycle
     implementation(libs.androidx.fragment.ktx)  // This includes the base fragment library
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 
     // UI components
     implementation(libs.androidx.recyclerview)
