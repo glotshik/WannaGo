@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:id="@+id/homeFragment"
+            android:icon="@drawable/ic_home"
+            android:title="Home"
+            />
+        <item
+            android:id="@+id/naughtyFragment"
+            android:icon="@drawable/ic_naughty"
+            android:title="Naughty List" />
+        <item
+            android:id="@+id/niceFragment"
+            android:icon="@drawable/ic_nice"
+            android:title="Nice List" />
+</menu>
+
+<!--<menu xmlns:android="http://schemas.android.com/apk/res/android">-->
+<!--<group android:checkableBehavior="single">-->
+<!--    <item-->
+<!--        android:id="@+id/naughtyFragment"-->
+<!--        android:icon="@drawable/ic_naughty"-->
+<!--        android:title="Naughty List" />-->
+<!--    <item-->
+<!--        android:id="@+id/niceFragment"-->
+<!--        android:icon="@drawable/ic_nice"-->
+<!--        android:title="Nice List" />-->
+<!--</group>-->
+<!--</menu>-->

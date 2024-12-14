@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.nflteams.NFLTeamAdapter
-import com.example.nflteams.NFLTeamListViewModel
 import com.example.nflteams.databinding.FragmentTeamListBinding
 
 class NFLTeamListFragment : Fragment() {
@@ -30,7 +28,15 @@ class NFLTeamListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val teams = nflTeamListViewModel.teams
-        binding.nflteamRecyclerView.adapter = NFLTeamAdapter(teams)
+        binding.nflteamRecyclerView.adapter = NFLTeamAdapter(teams) { teamId ->
+            // Navigate to detail fragment
+            val detailFragment = NFLTeamDetailFragment.newInstance(teamId)
+            parentFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, detailFragment)
+                .addToBackStack(null) // Add to back stack for back navigation
+                .commit()
+        }
     }
 
     override fun onDestroyView() {

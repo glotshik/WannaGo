@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/naughty_person_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter Naughty Person"
+        app:layout_constraintBottom_toTopOf="@id/add_naughty_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <Button
+        android:id="@+id/add_naughty_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add to Naughty List"
+        app:layout_constraintBottom_toTopOf="@id/random_naughty_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/naughty_person_input" />
+
+    <Button
+        android:id="@+id/random_naughty_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Random Name"
+        app:layout_constraintBottom_toTopOf="@id/naughty_recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_naughty_btn" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/naughty_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/random_naughty_btn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

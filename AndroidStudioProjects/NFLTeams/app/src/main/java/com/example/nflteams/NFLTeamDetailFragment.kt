@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.nflteams.databinding.FragmentTeamDetailBinding
 
+private const val ARG_TEAM_ID = "team_id"
+
 class NFLTeamDetailFragment : Fragment() {
     private var _binding: FragmentTeamDetailBinding? = null
     private val binding get() = _binding!!
@@ -15,9 +17,12 @@ class NFLTeamDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val teamId = arguments?.getString(ARG_TEAM_ID) ?: ""
+        // In a real app, you would get the team from your ViewModel using the teamId
+        // For now, we'll just create a sample team
         team = NFLTeam(
-            teamId = "NE",
-            teamName = "New England Patriots",
+            teamId = teamId,
+            teamName = "New England Patriots", // This should come from your data source
             logoFile = "patriots_logo",
             conference = "AFC",
             division = "East",
@@ -25,6 +30,17 @@ class NFLTeamDetailFragment : Fragment() {
             latitude = 42.0909,
             longitude = -71.2643
         )
+    }
+
+    companion object {
+        fun newInstance(teamId: String): NFLTeamDetailFragment {
+            val args = Bundle().apply {
+                putString(ARG_TEAM_ID, teamId)
+            }
+            return NFLTeamDetailFragment().apply {
+                arguments = args
+            }
+        }
     }
 
     override fun onCreateView(

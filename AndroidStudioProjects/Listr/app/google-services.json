@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "571412280928",
+    "project_id": "fa-listr-app-gt",
+    "storage_bucket": "fa-listr-app-gt.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571412280928:android:29edf54fb02b1327297505",
+        "android_client_info": {
+          "package_name": "com.example.listr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnfROPbxJsGrZJfkFJF3KASSfSH_EItpY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
