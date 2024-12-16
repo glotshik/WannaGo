@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">NFLTeams</string>
+    <string name="team_name">Enter a Team Name.</string>
+    <string name="team_division">Division</string>
+    <string name="stadium_name">Stadium</string>
+    <string name="display_team_name"> Show Team Name</string>
+
+</resources>

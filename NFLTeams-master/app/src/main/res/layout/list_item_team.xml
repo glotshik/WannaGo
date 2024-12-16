@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/team_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Team Name"/>
+
+    <TextView
+        android:id="@+id/team_division"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Division"/>
+    <TextView
+        android:id="@+id/team_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ID"/>
+    <TextView
+        android:id="@+id/team_logofile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logo"/>
+    <TextView
+        android:id="@+id/team_conference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Conference"/>
+    <TextView
+        android:id="@+id/team_stadium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Stadium"/>
+    <TextView
+        android:id="@+id/team_latitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Latitude"/>
+    <TextView
+        android:id="@+id/team_longitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Longitude"/>
+
+
+
+</LinearLayout>
