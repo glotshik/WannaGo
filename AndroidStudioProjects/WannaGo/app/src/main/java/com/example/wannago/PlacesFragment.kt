@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wannago.databinding.FragmentPlacesBinding
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.Locale
 
 private const val TAG = "PlacesFragment"
@@ -66,8 +68,7 @@ class PlacesFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize dependencies
-        fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(requireActivity())
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         geocoder = Geocoder(requireContext(), Locale.getDefault())
 
         // Initialize RecyclerView
@@ -84,8 +85,35 @@ class PlacesFragment : Fragment(), OnMapReadyCallback {
                 )
             }
         )
-        binding.markersRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.markersRecyclerView.adapter = adapter
+
+        binding.markersRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            this.adapter = this@PlacesFragment.adapter
+
+            // swipe-to-delete functionality
+            val swipeHandler = SwipeToDeleteCallback(this@PlacesFragment.adapter) { marker ->
+                Log.d(TAG, "Swipe delete triggered for marker: ${marker.id}")
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Delete Location")
+                    .setMessage("Are you sure you want to delete this location?")
+                    .setPositiveButton("Delete") { dialog, _ ->
+                        Log.d(TAG, "Delete confirmed for marker: ${marker.id}")
+                        viewModel.deleteMarker(marker)
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        Log.d(TAG, "Delete cancelled for marker: ${marker.id}")
+                        this@PlacesFragment.adapter.notifyDataSetChanged()
+                        dialog.dismiss()
+                    }
+                    .setOnDismissListener {
+                        Log.d(TAG, "Dialog dismissed for marker: ${marker.id}")
+                    }
+                    .show()
+            }
+            ItemTouchHelper(swipeHandler).attachToRecyclerView(this)
+        }
+
 
         // Initialize Map
         binding.mapView.getMapAsync(this)
@@ -99,8 +127,6 @@ class PlacesFragment : Fragment(), OnMapReadyCallback {
         // Request permissions
         checkAndRequestLocationPermissions()
     }
-
-    // In your PlacesFragment.kt, update the onMapReady function:
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
