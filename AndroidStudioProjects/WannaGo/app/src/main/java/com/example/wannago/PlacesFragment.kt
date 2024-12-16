@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -30,23 +31,25 @@ private const val TAG = "PlacesFragment"
 private const val DEFAULT_ZOOM = 15f
 
 class PlacesFragment : Fragment(), OnMapReadyCallback {
-
     private var _binding: FragmentPlacesBinding? = null
-    // Non-null getter that requires the binding to exist
     private val binding get() = _binding!!
 
     private val viewModel: PlacesViewModel by viewModels()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var geocoder: Geocoder
     private var locationPermissionGranted = false
-    private var googleMap: GoogleMap? = null
+    private var map: GoogleMap? = null
+    private lateinit var adapter: MarkerAdapter
 
-    private val defaultLocation = LatLng(-33.8523341, 151.2106085)
+    private val defaultLocation = LatLng(47.6062, -122.3321) // Seattle coordinates
+
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        locationPermissionGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
+        locationPermissionGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
         updateMapUI()
+        getDeviceLocation()
     }
 
     override fun onCreateView(
@@ -55,45 +58,101 @@ class PlacesFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPlacesBinding.inflate(inflater, container, false)
-
-        fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(requireContext())
-        geocoder = Geocoder(requireContext(), Locale.getDefault())
-
-        setupMapView(savedInstanceState)
-        setupRecyclerView()
-        checkAndRequestLocationPermissions()
-
+        binding.mapView.onCreate(savedInstanceState)
         return binding.root
     }
 
-    private fun setupMapView(savedInstanceState: Bundle?) {
-        binding.mapView.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Initialize dependencies
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireActivity())
+        geocoder = Geocoder(requireContext(), Locale.getDefault())
+
+        // Initialize RecyclerView
+        adapter = MarkerAdapter(
+            onDeleteClick = { marker ->
+                viewModel.deleteMarker(marker)
+            },
+            onItemClick = { marker ->
+                map?.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        LatLng(marker.latitude, marker.longitude),
+                        DEFAULT_ZOOM
+                    )
+                )
+            }
+        )
+        binding.markersRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.markersRecyclerView.adapter = adapter
+
+        // Initialize Map
         binding.mapView.getMapAsync(this)
+
+        // Observe markers
+        viewModel.markers.observe(viewLifecycleOwner) { markers ->
+            adapter.submitList(markers)
+            updateMapMarkers(markers)
+        }
+
+        // Request permissions
+        checkAndRequestLocationPermissions()
     }
 
-    private fun setupRecyclerView() {
-        binding.markersRecyclerView.layoutManager = LinearLayoutManager(context)
+    // In your PlacesFragment.kt, update the onMapReady function:
 
-        viewModel.markers.observe(viewLifecycleOwner) { markers ->
-            // Clear existing markers on the map
-            googleMap?.clear()
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+        updateMapUI()
 
-            // Add markers to the map
-            markers.forEach { markerLocation ->
-                val latLng = LatLng(markerLocation.latitude, markerLocation.longitude)
-                googleMap?.addMarker(
-                    MarkerOptions()
-                        .position(latLng)
-                        .title(markerLocation.address)
+        map?.setOnMapClickListener { latLng ->
+            val marker = try {
+                val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+                val address = addresses?.firstOrNull()?.getAddressLine(0) ?: "Unknown Location"
+
+                MarkerLocation(
+                    id = "", // Firestore will generate this
+                    latitude = latLng.latitude,
+                    longitude = latLng.longitude,
+                    address = address
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "Error getting address, using default", e)
+                MarkerLocation(
+                    id = "",
+                    latitude = latLng.latitude,
+                    longitude = latLng.longitude,
+                    address = "Unknown Location"
                 )
             }
 
-            // Set up RecyclerView adapter with delete functionality
-            binding.markersRecyclerView.adapter = MarkerAdapter(markers) { marker ->
-                viewModel.deleteMarker(marker)
+            try {
+                viewModel.addMarker(marker)
+                // Show feedback to user
+                Toast.makeText(
+                    context,
+                    "Location marked: ${marker.address}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error adding marker", e)
+                Toast.makeText(
+                    context,
+                    "Error saving location",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
+
+        // Enable zoom controls
+        map?.uiSettings?.apply {
+            isZoomControlsEnabled = true
+            isMyLocationButtonEnabled = true
+        }
+
+        // Get device location after map is ready
+        getDeviceLocation()
     }
 
     private fun checkAndRequestLocationPermissions() {
@@ -104,7 +163,9 @@ class PlacesFragment : Fragment(), OnMapReadyCallback {
             ) == PackageManager.PERMISSION_GRANTED -> {
                 locationPermissionGranted = true
                 updateMapUI()
+                getDeviceLocation()
             }
+
             else -> {
                 locationPermissionRequest.launch(
                     arrayOf(
@@ -118,102 +179,102 @@ class PlacesFragment : Fragment(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun getDeviceLocation() {
-        googleMap?.let { map ->
+        try {
             if (locationPermissionGranted) {
+                Log.d(TAG, "Getting device location")
                 fusedLocationProviderClient.getCurrentLocation(
                     Priority.PRIORITY_HIGH_ACCURACY,
                     CancellationTokenSource().token
                 ).addOnCompleteListener(requireActivity()) { task ->
-                    if (task.isSuccessful) {
+                    if (task.isSuccessful && task.result != null) {
                         val location = task.result
-                        if (location != null) {
-                            map.moveCamera(
-                                CameraUpdateFactory.newLatLngZoom(
-                                    LatLng(location.latitude, location.longitude),
-                                    DEFAULT_ZOOM
-                                )
+                        Log.d(
+                            TAG,
+                            "Got device location: ${location.latitude}, ${location.longitude}"
+                        )
+                        map?.moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                LatLng(location.latitude, location.longitude),
+                                DEFAULT_ZOOM
                             )
-                        } else {
-                            Log.d(TAG, "Current location is null. Using defaults.")
-                            map.moveCamera(
-                                CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM)
-                            )
-                        }
+                        )
                     } else {
-                        Log.d(TAG, "Current location is null. Using defaults.")
-                        map.moveCamera(
+                        Log.d(TAG, "Using default location")
+                        map?.moveCamera(
                             CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM)
                         )
                     }
                 }
+            } else {
+                Log.d(TAG, "Location permission not granted")
             }
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Exception: ${e.message}", e)
         }
     }
 
     private fun updateMapUI() {
-        googleMap?.let { map ->
-            try {
+        try {
+            map?.let { googleMap ->
                 if (locationPermissionGranted) {
-                    map.isMyLocationEnabled = true
-                    map.uiSettings.isMyLocationButtonEnabled = true
+                    googleMap.isMyLocationEnabled = true
+                    googleMap.uiSettings.isMyLocationButtonEnabled = true
                 } else {
-                    map.isMyLocationEnabled = false
-                    map.uiSettings.isMyLocationButtonEnabled = false
+                    googleMap.isMyLocationEnabled = false
+                    googleMap.uiSettings.isMyLocationButtonEnabled = false
                 }
-            } catch (e: SecurityException) {
-                Log.e(TAG, "Location permission error", e)
             }
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Exception: ${e.message}", e)
         }
     }
 
-    override fun onMapReady(map: GoogleMap) {
-        googleMap = map
-        updateMapUI()
-
-        map.setOnMapClickListener { latLng ->
-            try {
-                val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-                val address = addresses?.firstOrNull()?.getAddressLine(0) ?: "Unknown Location"
-
-                val markerLocation = MarkerLocation(
-                    latitude = latLng.latitude,
-                    longitude = latLng.longitude,
-                    address = address
-                )
-
-                viewModel.addMarker(markerLocation)
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
-            } catch (e: Exception) {
-                Log.e(TAG, "Error adding marker", e)
-            }
+    private fun updateMapMarkers(markers: List<MarkerLocation>) {
+        map?.clear()
+        markers.forEach { marker ->
+            map?.addMarker(
+                MarkerOptions()
+                    .position(LatLng(marker.latitude, marker.longitude))
+                    .title(marker.address)
+            )
         }
-
-        getDeviceLocation()
+        Log.d(TAG, "Updated ${markers.size} markers on map")
     }
 
-    // Lifecycle methods for MapView
+    // MapView lifecycle methods
+    override fun onStart() {
+        super.onStart()
+        _binding?.mapView?.onStart()
+    }
+
     override fun onResume() {
         super.onResume()
-        binding.mapView.onResume()
+        _binding?.mapView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        binding.mapView.onPause()
+        _binding?.mapView?.onPause()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.mapView.onDestroy()
+    override fun onStop() {
+        super.onStop()
+        _binding?.mapView?.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        _binding?.mapView?.onSaveInstanceState(outState)
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        binding.mapView.onLowMemory()
+        _binding?.mapView?.onLowMemory()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding?.mapView?.onDestroy()
         _binding = null
     }
 }

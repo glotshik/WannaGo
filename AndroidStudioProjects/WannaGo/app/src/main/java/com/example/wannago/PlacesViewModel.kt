@@ -1,21 +1,28 @@
 package com.example.wannago
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
 
 class PlacesViewModel(application: Application) : AndroidViewModel(application) {
+    private val TAG = "PlacesViewModel"
 
-    init {
-        // This ensures Firebase is initialized for this context
-        FirebaseApp.initializeApp(getApplication())
+    private val firestore: FirebaseFirestore by lazy {
+        try {
+            if (FirebaseApp.getApps(application).isEmpty()) {
+                FirebaseApp.initializeApp(application)
+            }
+            FirebaseFirestore.getInstance()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error initializing Firestore", e)
+            throw e
+        }
     }
 
-    private val firestore = FirebaseFirestore.getInstance()
     private val _markers = MutableLiveData<List<MarkerLocation>>(emptyList())
     val markers: LiveData<List<MarkerLocation>> = _markers
 
@@ -24,46 +31,55 @@ class PlacesViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun addMarker(marker: MarkerLocation) {
-        // Add to Firestore
+        Log.d(TAG, "Adding marker: $marker")
         val documentRef = firestore.collection("locations").document()
         val firestoreMarker = marker.copy(id = documentRef.id)
 
         documentRef.set(firestoreMarker)
             .addOnSuccessListener {
-                // Fetch updated markers after successful addition
+                Log.d(TAG, "Successfully added marker with ID: ${documentRef.id}")
                 fetchMarkers()
             }
             .addOnFailureListener { exception ->
-                // Handle error, maybe log or show a toast
-                // Consider adding error logging or user feedback
+                Log.e(TAG, "Error adding marker", exception)
             }
     }
 
+    // In PlacesViewModel.kt
+
     private fun fetchMarkers() {
+        Log.d(TAG, "Fetching markers")
         firestore.collection("locations")
             .get()
             .addOnSuccessListener { querySnapshot ->
-                val fetchedMarkers = querySnapshot.documents.mapNotNull {
-                    it.toObject(MarkerLocation::class.java)
+                try {
+                    val fetchedMarkers = querySnapshot.documents.mapNotNull { doc ->
+                        doc.toObject(MarkerLocation::class.java)?.copy(id = doc.id)
+                    }
+                    Log.d(TAG, "Fetched ${fetchedMarkers.size} markers")
+                    _markers.value = fetchedMarkers
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error parsing markers", e)
+                    _markers.value = emptyList()
                 }
-                _markers.value = fetchedMarkers
             }
             .addOnFailureListener { exception ->
-                // Handle potential errors in fetching markers
-                // Consider logging or showing an error message
+                Log.e(TAG, "Error fetching markers", exception)
+                _markers.value = emptyList()
             }
     }
 
     fun deleteMarker(marker: MarkerLocation) {
+        Log.d(TAG, "Deleting marker: $marker")
         firestore.collection("locations")
             .document(marker.id)
             .delete()
             .addOnSuccessListener {
+                Log.d(TAG, "Successfully deleted marker with ID: ${marker.id}")
                 fetchMarkers()
             }
             .addOnFailureListener { exception ->
-                // Handle potential deletion errors
-                // Consider logging or showing an error message
+                Log.e(TAG, "Error deleting marker", exception)
             }
     }
 }

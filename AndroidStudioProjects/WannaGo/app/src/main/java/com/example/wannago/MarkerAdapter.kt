@@ -2,41 +2,53 @@ package com.example.wannago
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wannago.databinding.ItemMakerBinding
 
 class MarkerAdapter(
-    private val markers: List<MarkerLocation>,
-    private val onDeleteClick: (MarkerLocation) -> Unit
-) : RecyclerView.Adapter<MarkerAdapter.MarkerViewHolder>() {
+    private val onDeleteClick: (MarkerLocation) -> Unit,
+    private val onItemClick: (MarkerLocation) -> Unit
+) : ListAdapter<MarkerLocation, MarkerAdapter.MarkerViewHolder>(MarkerDiffCallback()) {
 
     inner class MarkerViewHolder(
         private val binding: ItemMakerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(marker: MarkerLocation) {
-            binding.tvAddress.text = marker.address
-            binding.tvLatitude.text = "Lat: ${marker.latitude}"
-            binding.tvLongitude.text = "Lon: ${marker.longitude}"
-
-            binding.btnDelete.setOnClickListener {
-                onDeleteClick(marker)
+            binding.apply {
+                root.setOnClickListener { onItemClick(marker) }
+                tvAddress.text = marker.address
+                tvLatitude.text = "Latitude: ${String.format("%.6f", marker.latitude)}"
+                tvLongitude.text = "Longitude: ${String.format("%.6f", marker.longitude)}"
+                btnDelete.setOnClickListener {
+                    onDeleteClick(marker)
+                }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarkerViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemMakerBinding.inflate(inflater, parent, false)
-        return MarkerViewHolder(binding)
+        return MarkerViewHolder(
+            ItemMakerBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
-    override fun getItemCount(): Int = markers.size
-
     override fun onBindViewHolder(holder: MarkerViewHolder, position: Int) {
-        holder.bind(markers[position])
+        holder.bind(getItem(position))
     }
 }
 
+private class MarkerDiffCallback : DiffUtil.ItemCallback<MarkerLocation>() {
+    override fun areItemsTheSame(oldItem: MarkerLocation, newItem: MarkerLocation): Boolean {
+        return oldItem.id == newItem.id
+    }
 
+    override fun areContentsTheSame(oldItem: MarkerLocation, newItem: MarkerLocation): Boolean {
+        return oldItem == newItem
+    }
+}

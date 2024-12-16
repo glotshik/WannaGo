@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "781080572494",
+    "project_id": "wannago-444703",
+    "storage_bucket": "wannago-444703.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781080572494:android:b77223f745b7db2bcc091f",
+        "android_client_info": {
+          "package_name": "com.example.wannago"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4E6rPFAawFmLq8I79k1cIMzRIXyffTjc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

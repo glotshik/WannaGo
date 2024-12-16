@@ -2,4 +2,9 @@
     <string name="app_name">WannaGo</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="welcome_message">Create your personal travel wishlist!</string>
+    <string name="start_exploring">Start Exploring</string>
+    <string name="home">Home</string>
+    <string name="places">Places</string>
+    <string name="about">About</string>
 </resources>

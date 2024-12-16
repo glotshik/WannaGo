@@ -10,15 +10,16 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
-        android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        tools:targetApi="31"
+        android:name=".WannaGoApplication"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.WannaGo"
-        tools:targetApi="31">
+        android:theme="@style/Theme.WannaGo">
 
         <!-- Don't forget us two so the map can work! -->
         <meta-data
@@ -27,7 +28,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAUNyMIWxsGf35mNYo8vEomc6Yj3TYnVJ8" />
+            android:value="AIzaSyDySlGhS4QbrV3kbp1Y9QYouExv6ogCyC4" />
 
         <activity
             android:name=".MainActivity"
